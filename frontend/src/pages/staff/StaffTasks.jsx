@@ -37,7 +37,12 @@ const StaffTasks = () => {
             <div className="d-flex justify-content-between align-items-center">
               <div>
                 <h5 className="mb-1">{task.title}</h5>
-                <p className="mb-1 text-muted">{task.description}</p>
+                <p className="mb-1 text-muted">{task.description || 'No details provided'}</p>
+                <div className="small text-muted">
+                  {task.department && <span className="me-2 text-capitalize">{task.department}</span>}
+                  {task.request_type && <span className="me-2 text-capitalize">Request: {task.request_type}</span>}
+                  {task.due_date && <span>Due: {new Date(task.due_date).toLocaleDateString()}</span>}
+                </div>
               </div>
               <div className="btn-group">
                 {['pending', 'in_progress', 'done'].map((status) => (

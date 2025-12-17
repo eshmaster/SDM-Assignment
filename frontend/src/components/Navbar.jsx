@@ -47,6 +47,11 @@ const Navbar = () => {
                     My Bookings
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/service-requests">
+                    Service Requests
+                  </NavLink>
+                </li>
               </>
             )}
             {user?.role === 'admin' && (
@@ -76,19 +81,31 @@ const Navbar = () => {
                     Tasks
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/staff/requests">
+                    Service Desk
+                  </NavLink>
+                </li>
               </>
             )}
             {user?.role === 'staff' && (
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/staff/tasks">
-                  My Tasks
-                </NavLink>
-              </li>
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/staff/tasks">
+                    My Tasks
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/staff/requests">
+                    Service Desk
+                  </NavLink>
+                </li>
+              </>
             )}
             {user?.role === 'vendor' && (
               <li className="nav-item">
-                <NavLink className="nav-link" to="/vendor/jobs">
-                  My Jobs
+                <NavLink className="nav-link" to="/vendor">
+                  Vendor Portal
                 </NavLink>
               </li>
             )}

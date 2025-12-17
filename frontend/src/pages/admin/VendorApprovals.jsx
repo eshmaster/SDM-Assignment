@@ -37,6 +37,8 @@ const VendorApprovals = () => {
             <tr>
               <th>Name</th>
               <th>Email</th>
+              <th>Service</th>
+              <th>Rate</th>
               <th>Status</th>
               <th></th>
             </tr>
@@ -45,7 +47,12 @@ const VendorApprovals = () => {
             {vendors.map((vendor) => (
               <tr key={vendor.id}>
                 <td>{vendor.name}</td>
-                <td>{vendor.email}</td>
+                <td>
+                  <div>{vendor.email}</div>
+                  <div className="text-muted small">{vendor.phone || 'N/A'}</div>
+                </td>
+                <td>{vendor.service_type || '—'}</td>
+                <td>${Number(vendor.rate || 0).toFixed(2)}</td>
                 <td>
                   <span className={`badge bg-${vendor.approval_status === 'approved' ? 'success' : vendor.approval_status === 'rejected' ? 'danger' : 'warning'}`}>
                     {vendor.approval_status}

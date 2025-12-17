@@ -10,6 +10,9 @@ const registerSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
   role: Joi.string().valid('guest', 'vendor').required(),
+  service_type: Joi.string().allow('', null),
+  vendor_rate: Joi.number().min(0).allow(null),
+  phone: Joi.string().allow('', null),
 });
 
 const loginSchema = Joi.object({
@@ -29,7 +32,15 @@ export const register = async (req, res, next) => {
   const user = await User.create(value);
 
   if (value.role === 'vendor') {
-    await Vendor.create({ user_id: user.id, name: value.name, email: value.email, approval_status: 'pending' });
+    await Vendor.create({
+      user_id: user.id,
+      name: value.name,
+      email: value.email,
+      approval_status: 'pending',
+      service_type: value.service_type,
+      rate: value.vendor_rate,
+      phone: value.phone,
+    });
   }
 
   const token = signToken(user);

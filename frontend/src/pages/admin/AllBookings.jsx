@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../api/client';
+import { formatDate, formatDateTime } from '../../utils/date';
 
 const statusOptions = ['pending', 'confirmed', 'cancelled', 'completed'];
 
@@ -39,8 +40,10 @@ const AllBookings = () => {
             <tr>
               <th>Guest</th>
               <th>Room</th>
-              <th>Dates</th>
+              <th>Dates & guests</th>
               <th>Status</th>
+              <th>Invoice</th>
+              <th>Extras</th>
               <th>Total</th>
               <th></th>
             </tr>
@@ -51,9 +54,24 @@ const AllBookings = () => {
                 <td>{booking.user_email || booking.user?.email}</td>
                 <td>{booking.room_name || booking.room?.name}</td>
                 <td>
-                  {booking.check_in} → {booking.check_out}
+                  {formatDate(booking.check_in)} → {formatDate(booking.check_out)}
+                  <div className="text-muted small">{booking.guest_count} guest(s)</div>
                 </td>
                 <td>{booking.status}</td>
+                <td>
+                  <div className="text-capitalize">{booking.payment_status}</div>
+                  {booking.invoice_due_at && (
+                    <div className="small text-muted">Due {formatDateTime(booking.invoice_due_at)}</div>
+                  )}
+                </td>
+                <td>
+                  <div className="small">
+                    Meal: {booking.meal_package || 'room-only'}
+                    <br />
+                    Add-ons: {Array.isArray(booking.addons) && booking.addons.length ? booking.addons.join(', ') : 'None'}
+                  </div>
+                  {booking.special_requests && <div className="small text-muted">Request: {booking.special_requests}</div>}
+                </td>
                 <td>${Number(booking.total_price || 0).toFixed(2)}</td>
                 <td className="text-end">
                   <div className="btn-group">

@@ -19,6 +19,10 @@ export class Vendor {
     return db(TABLE).where({ id }).first();
   }
 
+  static async findByUserId(userId) {
+    return db(TABLE).where({ user_id: userId }).first();
+  }
+
   static async update(id, payload) {
     const [vendor] = await db(TABLE).where({ id }).update(payload).returning('*');
     return vendor;

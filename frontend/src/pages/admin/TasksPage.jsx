@@ -1,10 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../api/client';
 
+const departments = ['housekeeping', 'maintenance', 'catering', 'guest_services', 'concierge', 'spa', 'transport'];
+const initialForm = {
+  title: '',
+  description: '',
+  staff_id: '',
+  vendor_id: '',
+  booking_id: '',
+  room_id: '',
+  department: '',
+  task_type: '',
+  priority: 'normal',
+  status: 'pending',
+  due_date: '',
+};
+
 const TasksPage = () => {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({ title: '', description: '', staff_id: '', status: 'pending' });
+  const [form, setForm] = useState(initialForm);
 
   const loadTasks = async () => {
     try {
@@ -25,7 +40,7 @@ const TasksPage = () => {
     e.preventDefault();
     try {
       await api.post('/tasks', form);
-      setForm({ title: '', description: '', staff_id: '', status: 'pending' });
+      setForm(initialForm);
       loadTasks();
     } catch (err) {
       setError(err.message);
@@ -52,6 +67,7 @@ const TasksPage = () => {
               <tr>
                 <th>Title</th>
                 <th>Assigned To</th>
+                <th>Department</th>
                 <th>Status</th>
                 <th></th>
               </tr>
@@ -61,6 +77,7 @@ const TasksPage = () => {
                 <tr key={task.id}>
                   <td>{task.title}</td>
                   <td>{task.staff_email || 'Unassigned'}</td>
+                  <td className="text-capitalize">{task.department || '—'}</td>
                   <td>{task.status}</td>
                   <td className="text-end">
                     <div className="btn-group">
@@ -99,23 +116,50 @@ const TasksPage = () => {
               </div>
               <div className="col-12">
                 <label className="form-label">Description</label>
-                <textarea
-                  className="form-control"
-                  rows="3"
-                  name="description"
-                  value={form.description}
-                  onChange={handleChange}
-                ></textarea>
+                <textarea className="form-control" rows="2" name="description" value={form.description} onChange={handleChange}></textarea>
               </div>
-              <div className="col-12">
+              <div className="col-md-6">
                 <label className="form-label">Staff ID</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  name="staff_id"
-                  value={form.staff_id}
-                  onChange={handleChange}
-                />
+                <input type="number" className="form-control" name="staff_id" value={form.staff_id} onChange={handleChange} />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Vendor ID</label>
+                <input type="number" className="form-control" name="vendor_id" value={form.vendor_id} onChange={handleChange} />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Booking ID</label>
+                <input type="number" className="form-control" name="booking_id" value={form.booking_id} onChange={handleChange} />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Room ID</label>
+                <input type="number" className="form-control" name="room_id" value={form.room_id} onChange={handleChange} />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Department</label>
+                <select className="form-select text-capitalize" name="department" value={form.department} onChange={handleChange}>
+                  <option value="">Select</option>
+                  {departments.map((dept) => (
+                    <option key={dept} value={dept}>
+                      {dept}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Task type</label>
+                <input className="form-control" name="task_type" value={form.task_type} onChange={handleChange} placeholder="booking_prep" />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Priority</label>
+                <select className="form-select" name="priority" value={form.priority} onChange={handleChange}>
+                  <option value="low">Low</option>
+                  <option value="normal">Normal</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Due date</label>
+                <input type="date" className="form-control" name="due_date" value={form.due_date} onChange={handleChange} />
               </div>
               <div className="col-12">
                 <label className="form-label">Status</label>
@@ -139,4 +183,3 @@ const TasksPage = () => {
 };
 
 export default TasksPage;
-

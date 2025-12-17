@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../api/client';
 
+const initialForm = { name: '', price: '', type: '', status: 'available', capacity: 1, amenities: '' };
+
 const ManageRooms = () => {
   const [rooms, setRooms] = useState([]);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({ name: '', price: '', type: '', status: 'available' });
+  const [form, setForm] = useState(initialForm);
   const [editing, setEditing] = useState(null);
 
   const loadRooms = async () => {
@@ -25,12 +27,13 @@ const ManageRooms = () => {
   const saveRoom = async (e) => {
     e.preventDefault();
     try {
+      const payload = { ...form, capacity: Number(form.capacity), price: Number(form.price) };
       if (editing) {
-        await api.put(`/rooms/${editing}`, form);
+        await api.put(`/rooms/${editing}`, payload);
       } else {
-        await api.post('/rooms', form);
+        await api.post('/rooms', payload);
       }
-      setForm({ name: '', price: '', type: '', status: 'available' });
+      setForm(initialForm);
       setEditing(null);
       loadRooms();
     } catch (err) {
@@ -40,7 +43,14 @@ const ManageRooms = () => {
 
   const editRoom = (room) => {
     setEditing(room.id);
-    setForm({ name: room.name, price: room.price, type: room.type, status: room.status });
+    setForm({
+      name: room.name,
+      price: room.price,
+      type: room.type,
+      status: room.status,
+      capacity: room.capacity || 1,
+      amenities: Array.isArray(room.amenities) ? room.amenities.join(', ') : room.amenities || '',
+    });
   };
 
   const deleteRoom = async (id) => {
@@ -64,6 +74,8 @@ const ManageRooms = () => {
                 <th>Name</th>
                 <th>Type</th>
                 <th>Status</th>
+                <th>Capacity</th>
+                <th>Amenities</th>
                 <th>Price</th>
                 <th></th>
               </tr>
@@ -78,6 +90,8 @@ const ManageRooms = () => {
                       {room.status}
                     </span>
                   </td>
+                  <td>{room.capacity}</td>
+                  <td className="small">{Array.isArray(room.amenities) ? room.amenities.join(', ') : room.amenities}</td>
                   <td>${room.price}</td>
                   <td className="text-end">
                     <button className="btn btn-sm btn-outline-primary me-2" onClick={() => editRoom(room)}>
@@ -124,6 +138,29 @@ const ManageRooms = () => {
                   value={form.price}
                   onChange={handleChange}
                   required
+                />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Capacity</label>
+                <input
+                  type="number"
+                  name="capacity"
+                  min="1"
+                  className="form-control"
+                  value={form.capacity}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Amenities (comma separated)</label>
+                <input
+                  type="text"
+                  name="amenities"
+                  className="form-control"
+                  value={form.amenities}
+                  onChange={handleChange}
+                  placeholder="wifi, balcony..."
                 />
               </div>
               <div className="col-md-6">

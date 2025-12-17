@@ -7,13 +7,15 @@ import Register from './pages/Register';
 import Rooms from './pages/Rooms';
 import BookingForm from './pages/BookingForm';
 import MyBookings from './pages/MyBookings';
+import ServiceRequests from './pages/ServiceRequests';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageRooms from './pages/admin/ManageRooms';
 import AllBookings from './pages/admin/AllBookings';
 import VendorApprovals from './pages/admin/VendorApprovals';
 import TasksPage from './pages/admin/TasksPage';
 import StaffTasks from './pages/staff/StaffTasks';
-import VendorJobs from './pages/vendor/VendorJobs';
+import ServiceDesk from './pages/staff/ServiceDesk';
+import VendorDashboard from './pages/vendor/VendorDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => (
@@ -36,6 +38,14 @@ const App = () => (
         element={(
           <ProtectedRoute roles={['guest']}>
             <MyBookings />
+          </ProtectedRoute>
+        )}
+      />
+      <Route
+        path="/service-requests"
+        element={(
+          <ProtectedRoute roles={['guest']}>
+            <ServiceRequests />
           </ProtectedRoute>
         )}
       />
@@ -88,13 +98,22 @@ const App = () => (
         )}
       />
       <Route
-        path="/vendor/jobs"
+        path="/staff/requests"
         element={(
-          <ProtectedRoute roles={['vendor']}>
-            <VendorJobs />
+          <ProtectedRoute roles={['staff', 'admin']}>
+            <ServiceDesk />
           </ProtectedRoute>
         )}
       />
+      <Route
+        path="/vendor"
+        element={(
+          <ProtectedRoute roles={['vendor']}>
+            <VendorDashboard />
+          </ProtectedRoute>
+        )}
+      />
+      <Route path="/vendor/jobs" element={<Navigate to="/vendor" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   </Layout>

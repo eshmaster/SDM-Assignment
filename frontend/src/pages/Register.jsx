@@ -5,7 +5,15 @@ import { useAuth } from '../context/AuthContext';
 const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'guest' });
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: 'guest',
+    service_type: '',
+    vendor_rate: '',
+    phone: '',
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -74,6 +82,44 @@ const Register = () => {
                   <option value="vendor">Vendor</option>
                 </select>
               </div>
+              {form.role === 'vendor' && (
+                <>
+                  <div className="mb-3">
+                    <label className="form-label">Service type</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="service_type"
+                      value={form.service_type}
+                      onChange={handleChange}
+                      placeholder="e.g. laundry, transportation"
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Rate (per job)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      className="form-control"
+                      name="vendor_rate"
+                      value={form.vendor_rate}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Contact phone</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </>
+              )}
               <button type="submit" className="btn btn-primary" disabled={loading}>
                 {loading ? 'Submitting...' : 'Register'}
               </button>

@@ -11,8 +11,14 @@ export class Task {
   static list(filters = {}) {
     const query = db(`${TABLE} as t`)
       .leftJoin('users as u', 't.staff_id', 'u.id')
-      .select('t.*', 'u.email as staff_email');
+      .leftJoin('rooms as r', 't.room_id', 'r.id')
+      .leftJoin('service_requests as sr', 't.request_id', 'sr.id')
+      .select('t.*', 'u.email as staff_email', 'r.name as room_name', 'sr.type as request_type');
     if (filters.staff_id) query.where('t.staff_id', filters.staff_id);
+    if (filters.booking_id) query.where('t.booking_id', filters.booking_id);
+    if (filters.vendor_id) query.where('t.vendor_id', filters.vendor_id);
+    if (filters.department) query.where('t.department', filters.department);
+    if (filters.status) query.where('t.status', filters.status);
     return query;
   }
 
